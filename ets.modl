@@ -1,0 +1,30 @@
+----- external global config file -----
+
+BaseRestDir = C:/Users/op961q/Documents/Repos/UD_api/src/
+BaseWebObjDir = C:/Users/op961q/Documents/Repos/UD_api/src/
+BaseModuleDir = C:/Users/op961q/Documents/Repos/modules/
+
+---------------------------------------
+
+config {
+  BaseModule = M5::REST
+  TargetModule = M5::REST::ETS
+  RestPath = lib/UDServer/REST/ETS
+  WebObjPath = lib/M5/REST/ETS
+  ModulePath = M5/REST/ETS
+}
+
+route /example/:id to get
+
+instantiate <%TargetModule%> with 
+  attuid => $self->attuid
+
+get :id
+  render on $result or $target_obj->value
+  error on $target_obj->error
+add_log account type content
+  render on $result or $target_obj->value
+  error on $target_obj->error
+
+modfn get id
+modfn add_log
