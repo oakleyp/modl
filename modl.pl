@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+package Modl::Parser;
+
 use strict; use warnings;
 use Data::Dumper;
 
@@ -30,8 +32,8 @@ my %routes = (
   }
 );
 
-my $web_mod_instance_name = lc((split('::', $WebModule))[-1]);
-my $mod_instance_name = lc((split('::', $Module))[-1])
+my $web_mod_instance_name = lc((split(/::/g, $WebModule))[-1]);
+my $mod_instance_name = lc((split(/::/g, $Module))[-1])
 
 my $web_mod_instantion = <<"PERL"
   my $web_mod_instance_name //= $WebModule->new(
@@ -174,6 +176,12 @@ sub write_modules {
     $web_object .= $web_sub_declarations->{declare}($_);
   }
 
+  $web_obj .= "
+    1;
+
+    __END__;
+  "
+
   #### Build Module ####
   my $module = '';
 
@@ -184,7 +192,7 @@ sub write_modules {
 
     use $BaseModule;
     use base '$BaseModule';
-  "
+  ";
 
   #declare constructor
   $module .= "
@@ -199,4 +207,10 @@ sub write_modules {
   foreach(keys %web_sub_declarations) {
     $module .= $web_sub_declarations->{declare}($_);
   }
+
+  $module .= "
+    1;
+
+    __END__
+  ";
 }
