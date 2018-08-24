@@ -60,9 +60,9 @@ my %web_sub_declarations = (
 
           
           if($web_mod_instance_name\-\>$sub_name()) {
-            \$self->render(json => $web_mod_instance_name->value)
+            \$self\-\>render(json => $web_mod_instance_name\-\>value)
           } elsif ($web_mod_instance_name->error) {
-            \$self->render_error(msg => $web_mod_instance_name->error);
+            \$self\-\>render_error(msg => $web_mod_instance_name\-\>error);
           }
         }
 PERL
@@ -119,7 +119,7 @@ sub write_modules {
 
   #instantiate target module instance
   $rest_module .= "
-    sub $mod_instance_name {
+    sub $web_mod_instance_name {
       my (\$self) = \@_;
 
       $web_mod_instantiation
@@ -156,6 +156,15 @@ sub write_modules {
       shift->SUPER::new(
         \@_
       )
+    }
+  ";
+
+  #instantiate module
+  $web_object .= "
+    sub $mod_instance_name {
+      my (\$self) = \@_;
+
+      $mod_instantiation
     }
   ";
   
